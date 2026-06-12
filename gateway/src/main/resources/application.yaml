@@ -1,0 +1,37 @@
+server:
+  port: 8080 # El frontend (React) apuntará siempre a este puerto
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*" # En producción pones la URL de React
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        # 1. Rutas hacia el Auth Service (Puerto 8081)
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/**
+
+        # 2. Rutas hacia el Ingestion Service (Puerto 8082)
+        - id: ingestion-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/transactions/**
+
+        # 3. Rutas hacia el Dashboard Service (Puerto 8083)
+        - id: dashboard-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/dashboard/**

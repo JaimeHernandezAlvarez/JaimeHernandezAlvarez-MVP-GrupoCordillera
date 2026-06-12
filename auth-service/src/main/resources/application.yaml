@@ -1,0 +1,24 @@
+server:
+  port: 8081 # El Gateway buscará este servicio en este puerto
+
+spring:
+  application:
+    name: auth-service
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/cordillera_auth?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root        
+    password:             #Contraseña local
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true        
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+jwt:
+  secret: CordilleraSuperSecretKey2026!#MVP_Local_Validation_Key
+  expiration: 86400000 # 1 día en milisegundos
