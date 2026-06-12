@@ -1,0 +1,21 @@
+server:
+  port: 8082 # Puerto mapeado en el API Gateway para /api/transactions/**
+
+spring:
+  application:
+    name: ingestion-service
+  
+  datasource:
+    # Se conecta a la base de datos de transacciones
+    url: jdbc:mysql://localhost:3306/cordillera_transactions?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root        # Cambia si tu usuario de MySQL es diferente
+    password:             # Pon tu contraseña si usas, o déjalo vacío para XAMPP
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update    # Creará automáticamente las tablas de Ventas, Sucursales, etc.
+    show-sql: true        # Muestra los inserts/updates en la consola
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
