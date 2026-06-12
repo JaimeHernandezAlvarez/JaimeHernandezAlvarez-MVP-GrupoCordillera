@@ -1,0 +1,21 @@
+server:
+  port: 8083 # Puerto mapeado en el API Gateway para /api/dashboard/**
+
+spring:
+  application:
+    name: dashboard-service
+  
+  datasource:
+    # Apunta a la misma BD transaccional para extraer métricas en tiempo real
+    url: jdbc:mysql://localhost:3306/cordillera_transactions?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 'validate' porque este servicio solo lee las tablas creadas por Ingesta, no debe modificarlas
+    show-sql: false       # Falso para no saturar la consola con tantas consultas analíticas de los gráficos
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
