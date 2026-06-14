@@ -19,3 +19,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+# ----------------------------------------------------
+# NUEVA CONFIGURACIÓN PARA TU SWAGGER SIN HATEOAS
+# ----------------------------------------------------
+springdoc:
+  api-docs:
+    path: /api/dashboard/v3/api-docs

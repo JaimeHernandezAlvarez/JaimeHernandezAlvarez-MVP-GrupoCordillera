@@ -1,15 +1,17 @@
 package com.mvp.dashboard.Dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.math.BigDecimal;
-//import java.util.List;
+import lombok.NoArgsConstructor;
+
 import java.util.Map;
 
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DashboardKpiResponse {
-    private BigDecimal totalRevenue; // Ingresos totales de la empresa
-    private Long totalTransactions;  // Cantidad de ventas realizadas
-    private Map<String, BigDecimal> salesByBranch; // Para un gráfico de torta (Ventas por Sucursal)
+    private Double totalRevenue;               // Ingresos totales
+    private Integer totalSalesCount;           // Cantidad total de transacciones
+    private Map<String, Double> salesByCategory; // Ventas agrupadas por categoría
+    private Map<String, Double> salesByBranch;   // Ventas agrupadas por sucursal
 }

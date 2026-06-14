@@ -1,46 +1,59 @@
 package com.mvp.dashboard.Service;
 
 import com.mvp.dashboard.Dto.DashboardKpiResponse;
-import com.mvp.dashboard.Repository.SaleRepository;
+import com.mvp.dashboard.Model.Sale;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
 
-    private final SaleRepository saleRepository;
+    private final RestTemplate restTemplate;
+    private final String INGESTION_SERVICE_URL = "http://localhost:8082/api/transactions/sales";
 
-    public DashboardKpiResponse getGeneralKpis() {
-        // 1. Obtenemos totales globales
-        BigDecimal totalRevenue = saleRepository.calculateTotalRevenue();
-        long totalTransactions = saleRepository.count(); // count() viene por defecto en JpaRepository
+    public DashboardKpiResponse getDashboardMetrics() {
+        ResponseEntity<List<Sale>> response = restTemplate.exchange(
+                INGESTION_SERVICE_URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Sale>>() {}
+        );
 
-        // 2. Procesamos el arreglo de objetos para convertirlo en un Diccionario (Map) fácil de leer para el Frontend
-        List<Object[]> branchData = saleRepository.getSalesGroupedByBranch();
-        Map<String, BigDecimal> salesByBranch = new HashMap<>();
-        
-        for (Object[] row : branchData) {
-            String branchName = (String) row[0];
-            BigDecimal branchTotal = (BigDecimal) row[1];
-            salesByBranch.put(branchName, branchTotal);
+        List<Sale> sales = response.getBody();
+
+        if (sales == null || sales.isEmpty()) {
+            return new DashboardKpiResponse(0.0, 0, Map.of(), Map.of());
         }
 
-        // 3. Si no hay ventas, evitamos que retorne 'null' en el dinero
-        if (totalRevenue == null) {
-            totalRevenue = BigDecimal.ZERO;
-        }
+        int totalSalesCount = sales.size();
 
-        // 4. Armamos y retornamos la respuesta
-        return DashboardKpiResponse.builder()
-                .totalRevenue(totalRevenue)
-                .totalTransactions(totalTransactions)
-                .salesByBranch(salesByBranch)
-                .build();
+        // AQUÍ ESTÁ LA SOLUCIÓN: Usamos .doubleValue() para extraer el número del BigDecimal
+        double totalRevenue = sales.stream()
+                .mapToDouble(sale -> sale.getAmount().doubleValue())
+                .sum();
+
+        // AQUÍ TAMBIÉN: Convertimos el BigDecimal a double para agrupar
+        Map<String, Double> salesByCategory = sales.stream()
+                .collect(Collectors.groupingBy(
+                        Sale::getProductCategory,
+                        Collectors.summingDouble(sale -> sale.getAmount().doubleValue())
+                ));
+
+        Map<String, Double> salesByBranch = sales.stream()
+                .collect(Collectors.groupingBy(
+                        sale -> sale.getBranch().getName(),
+                        Collectors.summingDouble(sale -> sale.getAmount().doubleValue())
+                ));
+
+        return new DashboardKpiResponse(totalRevenue, totalSalesCount, salesByCategory, salesByBranch);
     }
 }

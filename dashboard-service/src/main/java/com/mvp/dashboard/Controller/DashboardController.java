@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/dashboard") // Ruta que hace match con el Gateway
+@RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
 
     private final DashboardService dashboardService;
 
-    @GetMapping("/kpis")
-    public ResponseEntity<DashboardKpiResponse> getKpis() {
-        return ResponseEntity.ok(dashboardService.getGeneralKpis());
+    // GET: Obtener todas las métricas matemáticas del negocio
+    @GetMapping("/metrics")
+    public ResponseEntity<DashboardKpiResponse> getMetrics() {
+        return ResponseEntity.ok(dashboardService.getDashboardMetrics());
     }
 }

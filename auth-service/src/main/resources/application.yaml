@@ -22,3 +22,7 @@ spring:
 jwt:
   secret: CordilleraSuperSecretKey2026!#MVP_Local_Validation_Key
   expiration: 86400000 # 1 día en milisegundos
+
+springdoc:
+  api-docs:
+    path: /auth/v3/api-docs

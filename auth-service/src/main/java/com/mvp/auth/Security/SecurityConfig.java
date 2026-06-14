@@ -40,7 +40,18 @@ public class SecurityConfig {
             
             // 4. Configuramos qué endpoints son públicos y cuáles privados
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/health").permitAll() // Públicos
+                // AÑADIDO: Rutas de Swagger y documentación OpenAPI liberadas
+                .requestMatchers(
+                    "/auth/login", 
+                    "/auth/health",
+                    "/auth/users",           // <--- AÑADE ESTO para permitir el registro/listar
+                    "/auth/users/**",        // <--- AÑADE ESTO para permitir buscar/editar/eliminar por ID
+                    "/auth/v3/api-docs/**",  
+                    "/v3/api-docs/**",       
+                    "/swagger-ui/**",   
+                    "/swagger-ui.html"
+                ).permitAll() // Públicos
+                
                 .anyRequest().authenticated() // Cualquier otro endpoint requiere autenticación
             );
 
