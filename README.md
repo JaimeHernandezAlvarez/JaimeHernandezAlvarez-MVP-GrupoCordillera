@@ -2,7 +2,7 @@
 
 Sistema Full-Stack con Arquitectura de Microservicios (Spring Boot) y Frontend (React + TypeScript).
 
-## 📂 Estructura del Proyecto (Monorepo)
+## Estructura del Proyecto (Monorepo)
 
 Este repositorio contiene tanto el backend como el frontend del proyecto, organizados de la siguiente manera:
 
@@ -15,7 +15,7 @@ Este repositorio contiene tanto el backend como el frontend del proyecto, organi
 
 ---
 
-## 🛠️ Requisitos Previos
+## Requisitos Previos
 
 Asegúrate de tener instaladas las siguientes herramientas en tu sistema:
 - **Java 17** (`java -version`)
@@ -25,7 +25,7 @@ Asegúrate de tener instaladas las siguientes herramientas en tu sistema:
 
 ---
 
-## 🚀 Guía de Instalación y Ejecución
+## Guía de Instalación y Ejecución
 
 ### 1. Clonar el repositorio
 Abre tu terminal y ejecuta:
@@ -44,7 +44,7 @@ npm install
 
 ---
 
-## 🏃‍♂️ Orden de Encendido de los Servicios
+## Orden de Encendido de los Servicios
 
 Para que el sistema funcione correctamente y no haya errores de conexión, debes levantar los servicios **estrictamente en este orden**:
 
@@ -58,7 +58,7 @@ Para que el sistema funcione correctamente y no haya errores de conexión, debes
    npm run dev
 ---
 
-## 🌐 Enlaces de Acceso
+## Enlaces de Acceso
 Una vez que todo esté corriendo, puedes acceder a las diferentes partes del sistema:
 - **Frontend (Interfaz de Usuario):** `http://localhost:5173` (o el puerto que te indique Vite/React).
 - **Backend Swagger UI (Documentación API):** `http://localhost:8080/swagger-ui.html`
@@ -66,6 +66,6 @@ Una vez que todo esté corriendo, puedes acceder a las diferentes partes del sis
 
 ---
 
-## 💡 Notas para el Equipo de Desarrollo
+## Notas para el Equipo de Desarrollo
 - **CORS:** El backend ya está configurado para aceptar peticiones desde cualquier origen a través del Gateway. El Frontend solo debe apuntar sus peticiones (fetch/axios) a `http://localhost:8080`.
 - **Node Modules:** Las carpetas de `node_modules` están ignoradas en el `.gitignore` principal. Si clonas el proyecto de nuevo, no olvides correr `npm install` en la carpeta frontend.
