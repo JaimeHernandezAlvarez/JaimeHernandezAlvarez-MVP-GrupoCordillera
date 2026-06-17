@@ -29,9 +29,9 @@ Asegúrate de tener instaladas las siguientes herramientas en tu sistema:
 
 ### 1. Clonar el repositorio
 Abre tu terminal y ejecuta:
-git clone <https://github.com/JaimeHernandezAlvarez/JaimeHernandezAlvarez-MVP-GrupoCordillera.git>
-cd JaimeHernandezAlvarez-MVP-GrupoCordillera
-code .
+- git clone <https://github.com/JaimeHernandezAlvarez/JaimeHernandezAlvarez-MVP-GrupoCordillera.git>
+- cd JaimeHernandezAlvarez-MVP-GrupoCordillera
+- code .
 
 ### 2. Configurar y compilar el Backend (Java)
 Gracias a la arquitectura multimodular, no necesitas compilar cada servicio uno por uno. En la carpeta raíz del proyecto, ejecuta:
