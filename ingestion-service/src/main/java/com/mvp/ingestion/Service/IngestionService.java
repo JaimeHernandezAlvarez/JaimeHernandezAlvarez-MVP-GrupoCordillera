@@ -24,12 +24,14 @@ public class IngestionService {
         Branch branch = branchRepository.findById(request.getBranchId())
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada con ID: " + request.getBranchId()));
 
+        // Dentro de registerSale():
         Sale newSale = new Sale();
         newSale.setBranch(branch);
         newSale.setAmount(request.getAmount());
         newSale.setProductCategory(request.getProductCategory());
+        newSale.setEmployeeName(request.getEmployeeName()); // 🔥 LÍNEA NUEVA
         newSale.setTimestamp(LocalDateTime.now());
-
+        
         return saleRepository.save(newSale);
     }
 
@@ -67,4 +69,6 @@ public class IngestionService {
         Sale existingSale = getSaleById(id);
         saleRepository.delete(existingSale);
     }
+
+    
 }

@@ -14,17 +14,20 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación con la tabla de sucursales
     @ManyToOne(optional = false)
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
 
     @Column(nullable = false)
-    private BigDecimal amount; // Monto de la venta
+    private BigDecimal amount; 
 
     @Column(length = 50)
-    private String productCategory; // Ej: "Electrónica", "Hogar"
+    private String productCategory; 
+
+    // 🔥 NUEVO CAMPO: Guardamos el nombre o ID del trabajador que hizo la venta
+    @Column(name = "employee_name", nullable = false, length = 100)
+    private String employeeName;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp; // Fecha y hora exacta de la transacción
+    private LocalDateTime timestamp; 
 }
