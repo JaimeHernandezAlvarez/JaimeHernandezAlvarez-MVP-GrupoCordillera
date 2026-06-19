@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import { Login } from './components/Login';
-import { Dashboard } from './components/Dashboard';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   return (
-    <>
-      {isAuthenticated ? (
-        <Dashboard onLogout={() => setIsAuthenticated(false)} />
-      ) : (
-        <Login onLogin={() => setIsAuthenticated(true)} /> /* <-- CAMBIADO: onLoginSuccess por onLogin */
-      )}
-    </>
+    <Router>
+      <Routes>
+        {/* Ruta para la pantalla de inicio de sesión */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Ruta para el panel de control */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        
+        {/* Si escriben cualquier otra ruta o entran a "/", los mandamos al login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
   );
 };
 

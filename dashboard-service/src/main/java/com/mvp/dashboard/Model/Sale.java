@@ -10,5 +10,6 @@ public class Sale {
     private Branch branch;
     private BigDecimal amount;
     private String productCategory;
+    private String employeeName;
     private LocalDateTime timestamp;
 }
