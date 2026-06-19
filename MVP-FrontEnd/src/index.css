@@ -2,10 +2,9 @@
 
 @theme {
   /* Definiendo la paleta corporativa del Grupo Cordillera */
-  --color-cordillera-navy: #1e3a8a;     /* Azul rey de botones e inicio de sesión */
-  --color-cordillera-lightBg: #f4f7fc;  /* Fondo gris/azul claro de las pantallas */
+  --color-cordillera-navy: #1e3a8a;     
+  --color-cordillera-lightBg: #f4f7fc;  
   
-  /* Tamaños de texto adicionales para componentes de seguridad */
   --font-size-2xs: 0.75rem;
   --font-size-3xs: 0.7rem;
 }
