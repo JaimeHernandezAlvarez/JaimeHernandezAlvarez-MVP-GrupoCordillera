@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
-// 1. Ampliamos las interfaces para incluir a los trabajadores
 interface WorkerPerformance {
   employeeName: string;
   totalSales: number;
@@ -15,10 +14,10 @@ interface DashboardMetrics {
   totalSalesCount: number;
   salesByCategory: Record<string, number>;
   salesByBranch: Record<string, number>;
-  workerPerformance: WorkerPerformance[]; // 🔥 NUEVO CAMPO
+  workerPerformance: WorkerPerformance[];
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF'];
+const COLORS = ['#1e3a8a', '#00c49f', '#ffbb28', '#ff8042', '#af19ff'];
 
 export default function Dashboard() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
@@ -70,122 +69,185 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  if (error) return <div style={{ color: 'red', textAlign: 'center', marginTop: '50px', fontWeight: 'bold' }}>Error: {error}</div>;
-  if (!metrics) return <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '18px' }}>Cargando métricas... 🚀</div>;
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#f4f7fc] flex items-center justify-center p-6">
+        <div className="bg-white p-8 rounded-xl shadow-md border border-red-100 max-w-md w-full text-center">
+          <p className="text-red-600 font-bold text-lg mb-3">Error de Sistema</p>
+          <p className="text-gray-600 text-base">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!metrics) {
+    return (
+      <div className="min-h-screen bg-[#f4f7fc] flex flex-col items-center justify-center gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-900 border-t-transparent"></div>
+        <p className="text-base font-bold text-gray-500 uppercase tracking-wider">Cargando métricas corporativas...</p>
+      </div>
+    );
+  }
 
   const categoryData = Object.entries(metrics.salesByCategory || {}).map(([name, value]) => ({ name, value }));
   const branchData = Object.entries(metrics.salesByBranch || {}).map(([name, value]) => ({ name, value }));
-  
-  // Extraemos la lista de trabajadores (por si acaso viene nula, usamos un arreglo vacío)
   const workerData = metrics.workerPerformance || [];
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#333' }}>Dashboard de Resultados</h2>
-        <button onClick={handleLogout} style={{ padding: '8px 16px', cursor: 'pointer', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}>
-          Cerrar Sesión
-        </button>
-      </div>
+    <div className="w-full min-h-screen bg-[#f4f7fc] font-sans antialiased flex flex-col text-gray-800">
+      
+      {/* 1. NAVBAR - BALANCEADA */}
+      <header className="w-full bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <div className="w-full px-6 py-2 flex items-center justify-between">
+          
+          {/* Logo + Título */}
+          <div className="flex items-center gap-2">
+            <img 
+              src="/logo-grupo-cordillera.png" 
+              alt="Grupo Cordillera" 
+              className="h-25 w-auto object-contain" // Tamaño mediano para el logo
+            />
+            <div className="h-8 w-px bg-gray-300"></div>
+            <h1 className="text-lg font-bold text-gray-900">
+              Sistema de Monitoreo del Desempeño
+            </h1>
+          </div>
 
-      {/* Tarjetas de Resumen (KPIs) */}
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
-        <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', flex: 1, boxShadow: '0 2px 4px rgba(0,0,0,0.05)', borderLeft: '5px solid #0088FE' }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#666', fontSize: '16px' }}>Ingresos Totales</h3>
-          <p style={{ fontSize: '28px', fontWeight: 'bold', margin: 0, color: '#333' }}>
-            ${metrics.totalRevenue ? metrics.totalRevenue.toFixed(2) : '0.00'}
-          </p>
-        </div>
-        <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', flex: 1, boxShadow: '0 2px 4px rgba(0,0,0,0.05)', borderLeft: '5px solid #00C49F' }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#666', fontSize: '16px' }}>Total de Transacciones</h3>
-          <p style={{ fontSize: '28px', fontWeight: 'bold', margin: 0, color: '#333' }}>
-            {metrics.totalSalesCount || 0}
-          </p>
-        </div>
-      </div>
+          {/* Info de Sesión */}
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <span className="block text-sm font-semibold text-gray-800">Panel Administrativo</span>
+              <span className="block text-xs text-blue-800 font-bold uppercase tracking-wider">Sesión Activa</span>
+            </div>
+            <button 
+              onClick={handleLogout} 
+              className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 transition-colors rounded-lg text-sm font-bold cursor-pointer border border-red-200"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
 
-      {/* Gráficos de Sucursal y Categoría */}
-      <div style={{ display: 'flex', gap: '20px', height: '300px', marginBottom: '30px' }}>
-        <div style={{ flex: 1, padding: '15px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h4 style={{ textAlign: 'center', margin: '0 0 15px 0', color: '#555' }}>Ventas por Sucursal</h4>
-          <ResponsiveContainer width="100%" height="90%">
-            <BarChart data={branchData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" />
-              <YAxis />
-              {/* 🔥 CORRECCIÓN APLICADA AQUÍ */}
-              <Tooltip cursor={{ fill: '#f5f5f5' }} formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
-              <Bar dataKey="value" fill="#8884d8" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
         </div>
+      </header>
 
-        <div style={{ flex: 1, padding: '15px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h4 style={{ textAlign: 'center', margin: '0 0 15px 0', color: '#555' }}>Ventas por Categoría</h4>
-          <ResponsiveContainer width="100%" height="90%">
-            <PieChart>
-              <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                {categoryData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              {/* 🔥 CORRECCIÓN APLICADA AQUÍ */}
-              <Tooltip formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* NUEVA SECCIÓN: Rendimiento de Trabajadores */}
-      <div style={{ display: 'flex', gap: '20px', height: '350px' }}>
+      {/* 2. CONTENIDO PRINCIPAL */}
+      <main className="flex-grow w-full px-6 py-6 space-y-6">
         
-        {/* Gráfico de Ranking de Empleados */}
-        <div style={{ flex: 1, padding: '15px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-          <h4 style={{ textAlign: 'center', margin: '0 0 15px 0', color: '#555' }}>Ranking de Vendedores ($)</h4>
-          <ResponsiveContainer width="100%" height="90%">
-            <BarChart data={workerData} layout="vertical" margin={{ left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-              <XAxis type="number" />
-              <YAxis dataKey="employeeName" type="category" width={100} />
-              {/* 🔥 CORRECCIÓN APLICADA AQUÍ */}
-              <Tooltip cursor={{ fill: '#f5f5f5' }} formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
-              <Bar dataKey="totalSales" fill="#82ca9d" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        {/* KPIs - TAMAÑO MEDIANO */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* KPI Ingresos */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-blue-900">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Ingresos Totales</h3>
+            <p className="text-3xl font-bold text-gray-950">
+              ${metrics.totalRevenue ? metrics.totalRevenue.toLocaleString('es-CL', { minimumFractionDigits: 2 }) : '0,00'}
+            </p>
+          </div>
+
+          {/* KPI Transacciones */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 border-l-4 border-l-emerald-500">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total de Transacciones</h3>
+            <p className="text-3xl font-bold text-gray-950">
+              {metrics.totalSalesCount ? metrics.totalSalesCount.toLocaleString('es-CL') : 0}
+            </p>
+          </div>
         </div>
 
-        {/* Tabla de Detalles */}
-        <div style={{ flex: 1, padding: '15px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', overflowY: 'auto' }}>
-          <h4 style={{ textAlign: 'center', margin: '0 0 15px 0', color: '#555' }}>Desglose de Productividad</h4>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f4f4f4', borderBottom: '2px solid #ddd' }}>
-                <th style={{ padding: '10px' }}>Empleado</th>
-                <th style={{ padding: '10px' }}>Ventas Totales</th>
-                <th style={{ padding: '10px' }}>N° Transacciones</th>
-                <th style={{ padding: '10px' }}>Ticket Promedio</th>
-              </tr>
-            </thead>
-            <tbody>
-              {workerData.map((worker, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#333' }}>{worker.employeeName}</td>
-                  <td style={{ padding: '10px', color: '#28a745' }}>${worker.totalSales.toFixed(2)}</td>
-                  <td style={{ padding: '10px' }}>{worker.transactions}</td>
-                  <td style={{ padding: '10px', color: '#17a2b8' }}>${worker.averageTicket.toFixed(2)}</td>
-                </tr>
-              ))}
-              {workerData.length === 0 && (
-                <tr>
-                  <td colSpan={4} style={{ padding: '15px', textAlign: 'center', color: '#999' }}>No hay datos de empleados aún.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        {/* Gráficos - ALTURA REDUCIDA */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Ventas por Sucursal */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-[350px] flex flex-col">
+            <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-4">Ventas por Sucursal</h4>
+            <div className="flex-grow min-h-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={branchData} margin={{ bottom: 10 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                  <XAxis dataKey="name" stroke="#4b5563" fontSize={12} tickMargin={8} />
+                  <YAxis stroke="#4b5563" fontSize={12} tickMargin={8} />
+                  <Tooltip cursor={{ fill: '#f1f5f9' }} formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
+                  <Bar dataKey="value" fill="#1e3a8a" radius={[6, 6, 0, 0]} barSize={140} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Ventas por Categoría */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-[350px] flex flex-col">
+            <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-4">Ventas por Categoría</h4>
+            <div className="flex-grow min-h-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={90} label>
+                    {categoryData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
+                  <Legend iconSize={12} wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
 
-      </div>
+        {/* Sección Inferior - ALTURA REDUCIDA */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Ranking Vendedores */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-[380px] flex flex-col">
+            <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-4">Ranking de Vendedores ($)</h4>
+            <div className="flex-grow min-h-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={workerData} layout="vertical" margin={{ left: 10, right: 10 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
+                  <XAxis type="number" stroke="#4b5563" fontSize={12} />
+                  <YAxis dataKey="employeeName" type="category" width={100} stroke="#4b5563" fontSize={12} />
+                  <Tooltip cursor={{ fill: '#f1f5f9' }} formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
+                  <Bar dataKey="totalSales" fill="#00c49f" radius={[0, 6, 6, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Tabla Desglose */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-[380px] flex flex-col">
+            <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-4">Desglose de Productividad</h4>
+            <div className="overflow-auto flex-grow border border-gray-200 rounded-lg">
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200 sticky top-0 text-gray-800 font-bold">
+                    <th className="p-3 uppercase tracking-wider text-xs">Empleado</th>
+                    <th className="p-3 uppercase tracking-wider text-xs">Ventas</th>
+                    <th className="p-3 uppercase tracking-wider text-xs">Transacciones</th>
+                    <th className="p-3 uppercase tracking-wider text-xs">Ticket Prom.</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-gray-700">
+                  {workerData.map((worker, index) => (
+                    <tr key={index} className="hover:bg-gray-50/80 transition-colors">
+                      <td className="p-3 font-semibold text-gray-950">{worker.employeeName}</td>
+                      <td className="p-3 text-emerald-600 font-bold">${worker.totalSales.toLocaleString('es-CL', { minimumFractionDigits: 2 })}</td>
+                      <td className="p-3 font-semibold">{worker.transactions}</td>
+                      <td className="p-3 text-blue-950 font-bold">${worker.averageTicket.toLocaleString('es-CL', { minimumFractionDigits: 2 })}</td>
+                    </tr>
+                  ))}
+                  {workerData.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="p-6 text-center text-gray-400 font-semibold">
+                        No hay datos de empleados disponibles.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full py-4 bg-transparent text-center text-[16px] bg-white text-center text-xs text-gray-500 font-semibold">
+        © 2026 Grupo Cordillera. Todos los derechos reservados.
+      </footer>
     </div>
   );
 }

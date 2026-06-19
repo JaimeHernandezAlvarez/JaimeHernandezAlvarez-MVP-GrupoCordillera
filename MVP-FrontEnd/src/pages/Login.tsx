@@ -116,7 +116,7 @@ export default function Login() {
       </div>
 
       {/* Footer del Login */}
-      <footer className="fixed bottom-0 left-0 w-full py-6 bg-transparent text-center text-[11px] text-gray-600 font-medium px-4">
+      <footer className="fixed bottom-0 left-0 w-full py-6 bg-transparent text-center text-[16px] text-gray-600 font-medium px-4">
         © 2026 Grupo Cordillera. Todos los derechos reservados.
       </footer>
     </div>
