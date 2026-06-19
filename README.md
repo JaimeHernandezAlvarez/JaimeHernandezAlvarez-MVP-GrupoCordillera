@@ -71,9 +71,9 @@ Para facilitar la evaluación de este MVP, el sistema cuenta con inicializadores
 Puedes ingresar al Frontend inmediatamente usando las siguientes credenciales:
 - **Usuario:** `admin`
 - **Contraseña:** `admin123`
-
 ---
 
 ## Notas adicionales
 - **CORS:** El backend ya está configurado para aceptar peticiones desde cualquier origen a través del Gateway. El Frontend utiliza un Proxy en Vite para evitar bloqueos del navegador al comunicarse con `http://localhost:8080`.
 - **Node Modules:** Las carpetas de `node_modules` están ignoradas en el `.gitignore` principal. Si clonas el proyecto de nuevo, no olvides correr `npm install` en la carpeta frontend.
+- **Dependencias Maven:** Adicionalmente, MAVEN NO ES LA EXTENSIÓN DE VS CODE, Descarguelo directamente desde la página de Maven https://maven.apache.org/download.cgi , y asegurese de que se añada a la ruta (PATH) de windows, para que funcione en la terminal de VS CODE
