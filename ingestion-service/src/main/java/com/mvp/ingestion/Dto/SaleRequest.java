@@ -8,4 +8,5 @@ public class SaleRequest {
     private Long branchId;
     private BigDecimal amount;
     private String productCategory;
+    private String employeeName;
 }
